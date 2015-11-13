@@ -10,6 +10,18 @@
 			
 		),
 		
+		'maxcount' => 10,
+		
+		'refreshtime' => 180,
+		
+		'blacklist' => array(
+			
+			'alpha',
+			'bravo',
+			'charlie',
+			
+		),
+		
 	);
 	
 	define('CONSUMER_KEY', 'bla');

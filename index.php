@@ -1,8 +1,17 @@
+<?php
+
+	require 'lib/twitteroauth/autoload.php';
+	require 'lib/helper.php';
+	require 'config/index.php';
+	use Abraham\TwitterOAuth\TwitterOAuth;
+
+?>
+
 <html>
 	
 	<head>
 		<title>cubetech Twitterwall</title>
-		<meta http-equiv="refresh" content="180">
+		<meta http-equiv="refresh" content="<?php echo $config['refreshtime']; ?>">
 		<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="http://fast.fonts.net/jsapi/41eab4a5-26c6-4358-9023-123b85ce0c66.js"></script>
 		<script type="text/javascript">
@@ -41,11 +50,6 @@
 	<body>
 <?php
 
-	require 'lib/twitteroauth/autoload.php';
-	require 'lib/helper.php';
-	require 'config/index.php';
-	use Abraham\TwitterOAuth\TwitterOAuth;
-
 	$toa = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
 	 
 	$query = array(
@@ -58,21 +62,35 @@
 		$results = $_SESSION['twitter']['data'];
 	} else {
 		$results = $toa->get('search/tweets', $query);
+		if ($toa->getLastHttpCode() != 200) {
+			// API not successful
+			$results = array();
+		}
 		$_SESSION['twitter']['data'] = $results;
 		$_SESSION['twitter']['timestamp'] = time();
 	}
 	
-	//var_dump($results);
+	if(isset($_GET['dump'])) var_dump($result);
 
 	echo '<div class="boxes">';
 
+	$count = 0;
 	foreach ($results->statuses as $result) {
-		if(isset($_GET['dump'])) var_dump($result);
-		echo '<div class="box">
-				<div class="author"><img class="authorimage" src="' . str_replace('_normal', '', $result->user->profile_image_url) . '"></div>
-				<div class="authorname">@' . $result->user->screen_name . '</div><div class="timeago">' . timeAgo($result->created_at) . '</div>
-				<div class="message"><div class="spicku">&nbsp;</div>' . $result->text . '</div>
-			</div>';
+
+		if( contains($result->text, $config['blacklist']) == false && contains($result->user->screen_name, $config['blacklist']) == false ):
+
+			echo '<div class="box">
+					<div class="author"><img class="authorimage" src="' . str_replace('_normal', '', $result->user->profile_image_url) . '"></div>
+					<div class="authorname">@' . $result->user->screen_name . '</div><div class="timeago">' . timeAgo($result->created_at) . '</div>
+					<div class="message"><div class="spicku">&nbsp;</div>' . $result->text . '</div>
+				</div>';
+			$count++;
+	
+			if($count >= $config['maxcount'])
+				break;
+				
+		endif;
+		
 	}
 	
 	echo '</div>';

@@ -41,3 +41,19 @@
 		} 
 		return $string ? 'vor ' . implode(', ', $string) . '' : 'gerade jetzt';
 	}
+	
+	/**
+	 * contains
+	 *
+	 * @param $str string to search within
+	 * @param $arr array with keywords
+	 *			 
+	 * @return datetime - time ago 
+	 */
+	function contains($str, array $arr) {
+	    foreach($arr as $a) {
+	        if (stripos($str,$a) !== false) return true;
+	    }
+	    return false;
+	}
+
