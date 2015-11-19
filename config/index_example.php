@@ -22,6 +22,8 @@
 			
 		),
 		
+		'remove_rt' => TRUE,
+		
 	);
 	
 	define('CONSUMER_KEY', 'bla');

@@ -51,16 +51,22 @@
 <?php
 
 	$toa = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
-	 
+
 	$query = array(
 	  "q" => implode(' OR ', $config['keywords']),
 	);
+
+	if($config['remove_rt'] == TRUE) {
+		$query['q'] .= ' -filter:retweets';
+	}
 
 	session_start();
 	
 	if(isset($_SESSION['twitter']) && $_SESSION['twitter']['timestamp'] > (time() - 120) && !isset($_GET['nocache'])) {
 		$results = $_SESSION['twitter']['data'];
-	} else {
+	}
+	
+	if(!isset($results) || $results == '' || count($results) < 1) {
 		$results = $toa->get('search/tweets', $query);
 		if ($toa->getLastHttpCode() != 200) {
 			// API not successful
@@ -70,27 +76,37 @@
 		$_SESSION['twitter']['timestamp'] = time();
 	}
 	
-	if(isset($_GET['dump'])) var_dump($result);
+	if(isset($_GET['dump'])) var_dump($results);
 
 	echo '<div class="boxes">';
 
-	$count = 0;
-	foreach ($results->statuses as $result) {
+	if(isset($results) && $results != '') {
 
-		if( contains($result->text, $config['blacklist']) == false && contains($result->user->screen_name, $config['blacklist']) == false ):
-
-			echo '<div class="box">
-					<div class="author"><img class="authorimage" src="' . str_replace('_normal', '', $result->user->profile_image_url) . '"></div>
-					<div class="authorname">@' . $result->user->screen_name . '</div><div class="timeago">' . timeAgo($result->created_at) . '</div>
-					<div class="message"><div class="spicku">&nbsp;</div>' . $result->text . '</div>
-				</div>';
-			$count++;
+		$count = 0;
+		foreach ($results->statuses as $result) {
 	
-			if($count >= $config['maxcount'])
-				break;
-				
-		endif;
+			if( contains($result->text, $config['blacklist']) == false && contains($result->user->screen_name, $config['blacklist']) == false ):
+	
+				echo '<div class="box">
+						<div class="author"><img class="authorimage" src="' . str_replace('_normal', '', $result->user->profile_image_url) . '"></div>
+						<div class="authorname">@' . $result->user->screen_name . '</div><div class="timeago">' . timeAgo($result->created_at) . '</div>
+						<div class="message"><div class="spicku">&nbsp;</div>' . $result->text . '</div>
+					</div>';
+				$count++;
+
+				if($count >= $config['maxcount'])
+					break;
+
+			endif;
+			
+		}
 		
+	} else {
+
+		echo '<div class="box">
+				<div class="message">Derzeit keine Nachrichten verfügbar.</div>
+			</div>';
+
 	}
 	
 	echo '</div>';
