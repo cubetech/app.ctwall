@@ -15,7 +15,7 @@ h2 { font-weight: 400; }
 }
 
 .box > div { display: inline-block; vertical-align: middle; }
-.box .message { display: block; border: 0.46296vh solid #e5e5e5; margin-top: 8.70vh; font-family: Utility; font-size: 9.16vh; font-weight: 400; padding: 1% 2% 2% 2%; line-height: 10.19vh; position: relative; z-index: 1; overflow: visible; border-radius: 2px; }
+.box .message { display: block; border: 0.46296vh solid #e5e5e5; margin-top: 8.70vh; font-family: Utility; font-size: 7vh; font-weight: 400; padding: 1% 2% 2% 2%; line-height: 9.19vh; position: relative; z-index: 1; overflow: visible; border-radius: 2px; }
 .box .authorimage { width: 19.91vh; margin-right: 4.63vh; border-radius: 50%; border: 0.46296vh solid #e5e5e5; }
 .box .authorname { font-weight: 700; color: #f00; font-family: Utility; font-size: 7.78vh; }
 .box .timeago { font-family: Utility; font-size: 4.63vh; padding-top: 2.22vh; margin-left: 3.24vh; }
