@@ -1,6 +1,5 @@
 <?php
-	error_reporting(E_ALL);
-ini_set('display_errors', 1);
+
 	require 'lib/twitteroauth/autoload.php';
 	require 'lib/helper.php';
 	require 'config/index.php';
