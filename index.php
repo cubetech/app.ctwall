@@ -37,7 +37,7 @@ ini_set('display_errors', 1);
 			    }
 			    
 			    if (from) {
-				if($("div.boxes").children("div").legth > 1)
+				if($("div.boxes").children("div").length > 1)
                                     from.fadeOut(1000, next);
 			    } else {
 			        next();
